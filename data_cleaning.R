@@ -16,11 +16,11 @@ strike_1 <- c()
 
 for (n in 1:99) {
   if (rd_density_raw[n,2] == "Of which (sub-unit)") {
-    strike_1 <- c(strike, n)
+    strike_1 <- c(strike_1, n)
   }
 }
 
-rd_density_raw <- rd_density_raw[-strike, ]
+rd_density_raw <- rd_density_raw[-strike_1, ]
 
 #assign economic regions 
 
@@ -37,3 +37,28 @@ for (n in 2:90){
 }
 
 rd_density_raw$econ_region <- econ_region
+
+rd_density_raw <- rd_density_raw[rd_density_raw$Level == "Region",]
+
+rd_density_raw[] <- lapply(rd_density_raw, function(x) {
+  if (is.list(x)) unlist(x) else x
+})
+
+rd_density_raw <- rd_density_raw[,-2]
+
+write.csv(rd_density_raw, 
+          "C:/Users/Owner/Downloads/Menards 26-27/02_data_clean/road_density_clean.csv",
+          row.names = FALSE)
+
+#CRIME RATE CLEANING------------------------------------------------------------
+crime <- read_excel(
+  "C:/Users/Owner/Downloads/Menards 26-27/01_data_raw/crime_rate_raw.xlsx",
+  sheet = 2)
+
+crime <- crime[-1,-15]
+
+write.csv(rd_density_raw, 
+          "C:/Users/Owner/Downloads/Menards 26-27/02_data_clean/crime_rate_clean.csv",
+          row.names = FALSE)
+
+#
