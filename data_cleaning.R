@@ -114,4 +114,54 @@ income <- income[-1,]
 write.csv(income, row.names = TRUE,
     "C:/Users/Owner/Downloads/Menards 26-27/02_data_clean/income_clean.csv")
 
-#
+#CPI CLEANING-------------------------------------------------------------------
+cpi <- read_excel(sheet = 2,
+  "C:/Users/Owner/Downloads/Menards 26-27/01_data_raw/cpi_raw/cpi_english_raw.xlsx")
+
+cpi <- cpi[-(1:6),]
+cpi <- cpi[-(50:53),]
+
+cpi[[3]] <- as.numeric(cpi[[3]])
+month <- 1
+for (n in 2:49){
+  cpi[n,3] <- month
+  month <- month + 1
+  if (month == 13){
+    month <- 1
+
+  }
+}
+
+cpi[[1]] <- as.numeric(cpi[[1]])
+for (n in 2:49){
+  if (cpi[n,3] == 1){
+    year <- cpi[n,1]
+  }
+  cpi[n,1] <- year
+}
+
+colnames(cpi) <- cpi[1,]
+cpi <- cpi[-1,]
+cpi <- cpi[,-2]
+colnames(cpi)[1:2] <- c("year", "month")
+
+cpi$year <- as.numeric(cpi$year)
+income$month <- as.numeric(cpi$month)
+
+cpi$date <- as.Date(
+  paste(cpi$year, cpi$month, 1, sep = "-"),
+  format = "%Y-%m-%d"
+)
+
+cpi <- cpi[,-(1:2)]
+
+cpi <- cpi[, c("date", setdiff(names(cpi), "date"))]
+
+cpi <- t(cpi)
+
+colnames(cpi) <- paste(cpi[1,], "cpi", sep = "_")
+
+cpi <- cpi[-1,]
+
+write.csv(cpi, row.names = TRUE,
+          "C:/Users/Owner/Downloads/Menards 26-27/02_data_clean/cpi_clean.csv")
