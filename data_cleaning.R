@@ -61,4 +61,57 @@ write.csv(rd_density_raw,
           "C:/Users/Owner/Downloads/Menards 26-27/02_data_clean/crime_rate_clean.csv",
           row.names = FALSE)
 
+#INCOME CLEANING----------------------------------------------------------------
+income <- read_excel(
+  "C:/Users/Owner/Downloads/Menards 26-27/01_data_raw/income_raw/income_english_raw.xlsx"
+                     , sheet = 2)
+
+income <- income[-(1:6),]
+income <- income[-(110:113),]
+
+income[[3]] <- as.numeric(income[[3]])
+month <- 1
+for (n in 2:109){
+  income[n,3] <- month
+  month <- month + 1
+  if (month == 13){
+    month <- 1
+    
+  }
+}
+
+income[[1]] <- as.numeric(income[[1]])
+for (n in 2:109){
+  if (income[n,3] == 1){
+    year <- income[n,1]
+  }
+  income[n,1] <- year
+}
+
+colnames(income) <- income[1,]
+income <- income[-1,]
+income <- income[,-2]
+colnames(income)[1:2] <- c("year", "month")
+
+income$year <- as.numeric(income$year)
+income$month <- as.numeric(income$month)
+
+income$date <- as.Date(
+  paste(income$year, income$month, 1, sep = "-"),
+  format = "%Y-%m-%d"
+)
+
+income <- income[,-(1:2)]
+
+income <- income[, c("date", setdiff(names(income), "date"))]
+
+income <- t(income)
+
+colnames(income) <- paste(income[1,], "income", sep = "_")
+
+income <- income[-1,]
+
+write.csv(income, row.names = TRUE,
+    "C:/Users/Owner/Downloads/Menards 26-27/02_data_clean/income_clean.csv")
+
 #
