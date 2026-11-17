@@ -165,3 +165,26 @@ cpi <- cpi[-1,]
 
 write.csv(cpi, row.names = TRUE,
           "C:/Users/Owner/Downloads/Menards 26-27/02_data_clean/cpi_clean.csv")
+
+#REGIONAL PROTECTIONISM CLEANING------------------------------------------------
+rpot <- read_excel(
+  "C:/Users/Owner/Downloads/Menards 26-27/01_data_raw/reg_protect_raw.xlsx",
+  sheet = 2)
+
+rpot <- rpot[,-4]
+
+write.csv(rpot, row.names = FALSE,
+          "C:/Users/Owner/Downloads/Menards 26-27/02_data_clean/regional_prot_clean.csv")
+
+#TRANSPORT INFRASTRUCTURE CLEANING-----------------------------------------------
+infa <- read_excel("C:/Users/Owner/Downloads/Menards 26-27/01_data_raw/infastructure_raw.xlsx")
+
+infa <- infa[,(1:8)]
+infa <- infa[,-(1:2)]
+infa <- infa[,-(2:4)]
+infa <- infa[-1,]
+
+colnames(infa) <- c("region", "trans_index", "1 - trans_index")
+
+write.csv(infa, row.names = FALSE,
+          "C:/Users/Owner/Downloads/Menards 26-27/02_data_clean/infastructure_clean.csv")
